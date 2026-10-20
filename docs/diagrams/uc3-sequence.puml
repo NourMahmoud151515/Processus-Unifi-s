@@ -1,0 +1,26 @@
+@startuml
+actor RH
+participant "Route\n(FastAPI)" as R
+participant CandidatureService as S
+participant CandidatureRepository as D
+participant NotificationService as N
+
+RH -> R : POST /candidatures/1/accepter
+R -> S : accepter(1)
+S -> D : trouver(1)
+D --> S : candidature
+
+alt statut == EN_COURS
+  S -> D : sauvegarder(statut = ACCEPTEE)
+  S -> N : notifier(email, message)
+  loop jusqu'à 3 essais
+    N -> N : envoyer e-mail
+  end
+  N --> S : true / false
+  S --> R : candidature
+  R --> RH : 200 {id, statut: ACCEPTEE}
+else statut différent
+  S --> R : TransitionInvalide
+  R --> RH : 409
+end
+@enduml
