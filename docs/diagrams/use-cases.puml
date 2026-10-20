@@ -1,0 +1,32 @@
+@startuml
+left to right direction
+actor "Étudiant" as E
+actor "RH" as R
+actor "Encadrant" as C
+actor "Service e-mail" as M <<système>>
+
+rectangle "Gestion de stages" {
+  usecase "UC1 Publier une offre" as UC1
+  usecase "UC2 Postuler à une offre" as UC2
+  usecase "Consulter les candidatures" as UC3a
+  usecase "UC3 Accepter / Refuser" as UC3
+  usecase "Notifier le candidat" as N
+  usecase "UC4 Consulter l'état de candidature" as UC4
+  usecase "UC5 Déposer journal et rapport" as UC5
+  usecase "UC6 Évaluer le stage" as UC6
+  usecase "Valider le rapport" as V
+  usecase "Délivrer l'attestation" as A
+}
+
+R --> UC1
+R --> UC3a
+UC3 .> UC3a : <<extend>>
+UC3 .> N : <<include>>
+N --> M
+E --> UC2
+E --> UC4
+E --> UC5
+C --> UC6
+UC6 .> V : <<include>>
+A .> UC6 : <<extend>>
+@enduml
