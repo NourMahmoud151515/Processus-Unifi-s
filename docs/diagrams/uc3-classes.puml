@@ -1,0 +1,51 @@
+@startuml
+enum Statut {
+  DEPOSEE
+  EN_COURS
+  ACCEPTEE
+  REFUSEE
+}
+
+class Candidature {
+  +id: int
+  +etudiant_email: str
+  +offre_id: int
+  +statut: Statut
+}
+
+class CandidatureRepository {
+  +ajouter(c)
+  +trouver(id): Candidature
+  +sauvegarder(c)
+}
+
+class NotificationService {
+  +max_essais: int
+  +echecs: list
+  +notifier(email, message): bool
+}
+
+class CandidatureService {
+  +consulter(id): Candidature
+  +accepter(id): Candidature
+  +refuser(id): Candidature
+  -_decider(id, nouveau)
+}
+
+class "routes (router FastAPI)" as Routes {
+  POST /candidatures/{id}/consulter
+  POST /candidatures/{id}/accepter
+  POST /candidatures/{id}/refuser
+}
+
+class CandidatureIntrouvable <<exception>>
+class TransitionInvalide <<exception>>
+
+Candidature --> Statut
+Routes --> CandidatureService
+CandidatureService --> CandidatureRepository
+CandidatureService --> NotificationService
+CandidatureRepository o-- Candidature
+CandidatureService ..> CandidatureIntrouvable : lève
+CandidatureService ..> TransitionInvalide : lève
+@enduml
