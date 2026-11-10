@@ -1,0 +1,34 @@
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  RoundCorner 15
+}
+
+rectangle "Étude préliminaire\nVision en 5 lignes + acteurs\n(tag LCO)" as E #LightGray
+
+rectangle "BRANCHE FONCTIONNELLE" as BF #LightBlue {
+  rectangle "Capture des besoins fonctionnels\nUC1 à UC6 + diagramme de cas d'utilisation\nfiche UC3, issues #1 à #6" as F
+  rectangle "Analyse\ndiagramme de classes du domaine\nétats de la candidature" as A
+}
+
+rectangle "BRANCHE TECHNIQUE" as BT #LightGreen {
+  rectangle "Capture des besoins techniques\nsécurité, intégration e-mail,\nperformance, plateforme" as T
+  rectangle "Conception générique\narchitecture en couches\nroute, service, dépôt + CI\n(tag LCA)" as G
+}
+
+rectangle "FUSION DES DEUX BRANCHES\nConception préliminaire :\nUC3 réalisé sur l'architecture\n(tag v0.1-elaboration)" as M #Orange
+
+rectangle "Conception détaillée\nclasses + séquence UC3" as D #LightYellow
+rectangle "Codage et tests\n7 tests : unitaires + intégration" as C #LightYellow
+rectangle "Recette\nrevue croisée (pull request)\n(tag PD)" as R #LightYellow
+
+E --> F
+E --> T
+F --> A
+T --> G
+A --> M
+G --> M
+M --> D
+D --> C
+C --> R
+@enduml
